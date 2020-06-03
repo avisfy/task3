@@ -1,14 +1,13 @@
 package task3.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import task3.model.User;
 import task3.services.UserService;
-import task3.services.UserServiceImpl;
 
 import java.util.List;
 
@@ -39,8 +38,19 @@ public class TaskController {
 
     @RequestMapping(value = "/gen_user", method = RequestMethod.GET)
     @ResponseBody
-    public String genUser() {
-        return "test";
-        //return new User("name", "surname", "mail@mail.mm", "2000-02-02");
+    public User genUser() {
+        User u  = new User("uname", "usurname", "umail@mail.mm", "2000-02-02");
+        u.setId(1);
+        return u;
+    }
+
+    @RequestMapping(value = "/save_user", method = RequestMethod.POST)
+    public ResponseEntity saveUser(@RequestBody User u) {
+        userService.add(u);
+        List<User> users = userService.allUsers();
+        for(User user: users)  {
+            System.out.println(user);
+        }
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }
